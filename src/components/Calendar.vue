@@ -1,30 +1,19 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
+import Button from './Button.vue';
 
 const { dateString } = defineProps<{ dateString?: string }>();
 
 const date = ref(new Date());
-
-/* const year = date.getFullYear();
-const month = date.getMonth() ;
-
-console.log(date);
-
-
-const firstDay = new Date(year, month, 1);
-const firstDayIndex = firstDay.getDay();
-
-const lastDay = new Date(year, month + 1, 0);
-
-const lastMonthDate = new Date(year, month, 0); */
 
 const year = computed(() => {
   return date.value.getFullYear();
 });
 
 const month = computed(() => {
-  return date.value.getMonth();
+  return date.value.getMonth()
 });
+
 
 const firstDay = computed(() => {
   return new Date(year.value, month.value, 1);
@@ -53,6 +42,16 @@ function getIsActive(index: number) {
   return today === getDay(index);
 }
 
+function increment() {
+  date.value = new Date(date.value);
+  date.value.setMonth(date.value.getMonth() + 1);
+}
+
+function decrement() {
+  date.value = new Date(date.value);
+  date.value.setMonth(date.value.getMonth() - 1);
+}
+
 onMounted(() => {
   if (!dateString) return;
   const dateFromStr = new Date(dateString);
@@ -63,34 +62,49 @@ onMounted(() => {
 });
 </script>
 <template>
-  <div class="calendar__container">
-    <h1 class="calendar__title">{{ getTitle() }}</h1>
-    <ul class="calendar__list">
-      <li
-        v-for="value in 35"
-        class="calendar__item"
-        :class="{ calendar__item_active: getIsActive(value) }"
-      >
-        <span class="calendar__day">{{ getDay(value) }}</span>
+  <div class="calendar">
+    <header class="header">
+      <Button side="left" @click="decrement" />
+      <h1 class="header__title">{{ getTitle() }}</h1>
+      <Button side="right" @click="increment" />
+    </header>
+    <ul class="list">
+      <li v-for="value in 35" class="list__item" :class="{ list__item_active: getIsActive(value) }">
+        <span>{{ getDay(value) }}</span>
       </li>
     </ul>
   </div>
 </template>
 <style scoped lang="scss">
 .calendar {
-  &__container {
-  }
+  border: 1px solid black;
+  border-radius: 15px;
+  padding: 15px;
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  margin-block-end: 20px;
+
   &__title {
     text-align: center;
     font-size: 25px;
-    margin-block-end: 15px;
+    margin-inline: 40px;
   }
-  &__list {
-    display: grid;
-    grid-template-columns: repeat(7, 45px);
-    grid-template-rows: repeat(5, 45px);
-    gap: 15px;
+
+  &__button {
+    background-color: red;
   }
+}
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(7, 45px);
+  grid-template-rows: repeat(5, 45px);
+  gap: 15px;
 
   &__item {
     display: flex;
@@ -100,11 +114,10 @@ onMounted(() => {
     inline-size: 100%;
     aspect-ratio: 1;
     border: 1px solid cyan;
+
     &_active {
       background-color: red;
     }
-  }
-  &__day {
   }
 }
 </style>
