@@ -2,11 +2,12 @@
 import { computed, onMounted, ref } from "vue";
 import Button from "./Button.vue";
 import Dropdown from "./Dropdown.vue";
+import { WEEKDAYS } from "../constants/constants";
 
 const { dateString } = defineProps<{ dateString?: string }>();
 
 const date = ref(new Date());
-const lang = ref<'ru' | 'en'>('ru');
+const lang = ref<"ru" | "en">("ru");
 
 const year = computed(() => {
   return date.value.getFullYear();
@@ -35,7 +36,13 @@ function getDay(index: number) {
 
 function getTitle() {
   const month = date.value.toLocaleString(lang.value, { month: "long" });
-  return `${month} ${year.value}`;
+  const monthString = month.charAt(0).toUpperCase() + month.slice(1).toLowerCase();
+  return `${monthString} ${year.value}`;
+}
+
+function getDayname(index: number) {
+  return WEEKDAYS[lang.value][index - 1];
+  
 }
 
 function getIsActive(index: number) {
@@ -58,7 +65,7 @@ function decrement() {
 }
 
 function handleLangChange(value: string) {
-  if (value === 'ru' || value === 'en') {
+  if (value === "ru" || value === "en") {
     lang.value = value;
   }
 }
@@ -79,6 +86,9 @@ onMounted(() => {
       <h1 class="header__title">{{ getTitle() }}</h1>
       <Button side="right" @click="increment" />
     </header>
+    <ul class="days">
+      <li v-for="value in 7" class="days__item">{{ getDayname(value) }}</li>
+    </ul>
     <ul class="list">
       <li
         v-for="value in 35"
@@ -88,7 +98,14 @@ onMounted(() => {
         <span>{{ getDay(value) }}</span>
       </li>
     </ul>
-    <Dropdown title="Язык" :options="[{title: 'Русский', value: 'ru'}, {title: 'Английский', value: 'en'}]" @change="handleLangChange"/>
+    <Dropdown
+      title="Язык"
+      :options="[
+        { title: 'Русский', value: 'ru' },
+        { title: 'Английский', value: 'en' },
+      ]"
+      @change="handleLangChange"
+    />
   </div>
 </template>
 <style scoped lang="scss">
@@ -135,6 +152,21 @@ onMounted(() => {
     &_active {
       background-color: red;
     }
+  }
+}
+
+.days {
+  margin-block-end: 15px;
+  display: flex;
+  gap: 15px;
+  &__item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    inline-size: 45px;
+    block-size: 45px;
+    border: 1px solid cyan;
+    text-transform: uppercase;
   }
 }
 </style>
