@@ -57,7 +57,7 @@ function handleChange({ title, value }: { title: string; value: string }) {
 }
 
 .list {
-  display: none;
+  display: block;
   position: absolute;
   inset-inline-start: 45px;
   inset-block-start: 30px;
@@ -65,7 +65,6 @@ function handleChange({ title, value }: { title: string; value: string }) {
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   inline-size: 100px;
   &__item {
-    padding: 12px;
     cursor: pointer;
     &:hover {
       background-color: red;
@@ -75,6 +74,7 @@ function handleChange({ title, value }: { title: string; value: string }) {
     @include mixins.button();
     inline-size: 100%;
     block-size: 100%;
+    padding: 12px;
   }
 }
 </style>
