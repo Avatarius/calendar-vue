@@ -5,7 +5,7 @@ import Calendar from './components/Calendar.vue';
 
 <template>
 <div class="container">
-  <Calendar date-string="2025-08-21"/>
+  <Calendar/>
 </div>
 </template>
 

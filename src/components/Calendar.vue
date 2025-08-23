@@ -7,7 +7,9 @@ import { WEEKDAYS } from "../constants/constants";
 const { dateString } = defineProps<{ dateString?: string }>();
 
 const date = ref(new Date());
+
 const lang = ref<"ru" | "en">("ru");
+const selectedDate = ref<Date | null>(null);
 
 const year = computed(() => {
   return date.value.getFullYear();
@@ -25,32 +27,41 @@ const firstDayIndex = computed(() => {
   return firstDay.value.getDay();
 });
 
-function getDay(index: number) {
-  const current = new Date(
+function getDate(index: number) {
+  const date = new Date(
     year.value,
     month.value,
     index + 1 - firstDayIndex.value
   );
-  return current.getDate();
+  return date;
 }
 
 function getTitle() {
   const month = date.value.toLocaleString(lang.value, { month: "long" });
-  const monthString = month.charAt(0).toUpperCase() + month.slice(1).toLowerCase();
+  const monthString =
+    month.charAt(0).toUpperCase() + month.slice(1).toLowerCase();
   return `${monthString} ${year.value}`;
 }
 
 function getDayname(index: number) {
   return WEEKDAYS[lang.value][index - 1];
-  
 }
 
 function getIsActive(index: number) {
   const today = new Date();
   return (
-    today.getDate() === getDay(index) &&
+    today.getDate() === getDate(index).getDate() &&
     today.getMonth() === date.value.getMonth() &&
     today.getFullYear() === date.value.getFullYear()
+  );
+}
+
+function getIsSelected(index: number) {
+  const current = getDate(index);
+  return (
+    current.getDate() === selectedDate.value?.getDate() &&
+    current.getMonth() === selectedDate.value.getMonth() &&
+    current.getFullYear() === selectedDate.value.getFullYear()
   );
 }
 
@@ -68,6 +79,12 @@ function handleLangChange(value: string) {
   if (value === "ru" || value === "en") {
     lang.value = value;
   }
+}
+
+function handleClick(index: number) {
+  const current = getDate(index);
+  selectedDate.value = current;
+  console.log(current);
 }
 
 onMounted(() => {
@@ -93,9 +110,14 @@ onMounted(() => {
       <li
         v-for="value in 35"
         class="list__item"
-        :class="{ list__item_active: getIsActive(value) }"
+        :class="{
+          list__item_active: getIsActive(value),
+          list__item_selected: getIsSelected(value),
+        }"
       >
-        <span>{{ getDay(value) }}</span>
+        <button class="list__button" @click="handleClick(value)">
+          {{ getDate(value).getDate() }}
+        </button>
       </li>
     </ul>
     <Dropdown
@@ -109,6 +131,8 @@ onMounted(() => {
   </div>
 </template>
 <style scoped lang="scss">
+@use "../styles/mixins.scss";
+
 .calendar {
   border: 1px solid black;
   border-radius: 15px;
@@ -152,6 +176,16 @@ onMounted(() => {
     &_active {
       background-color: red;
     }
+
+    &_selected {
+      background-color: blue;
+    }
+  }
+
+  &__button {
+    @include mixins.button();
+    inline-size: 100%;
+    block-size: 100%;
   }
 }
 
@@ -159,6 +193,7 @@ onMounted(() => {
   margin-block-end: 15px;
   display: flex;
   gap: 15px;
+
   &__item {
     display: flex;
     justify-content: center;
