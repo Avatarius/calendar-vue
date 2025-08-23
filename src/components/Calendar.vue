@@ -167,6 +167,7 @@ onMounted(() => {
     block-size: 45px;
     border: 1px solid cyan;
     text-transform: uppercase;
+    font-size: 12px;
   }
 }
 </style>
