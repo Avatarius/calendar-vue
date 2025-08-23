@@ -36,7 +36,11 @@ function handleChange({ title, value }: { title: string; value: string }) {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin-block-start: 20px;
+  background-color: rgb(0, 95, 196);
+  border-bottom-left-radius: inherit;
+  border-bottom-right-radius: inherit;
+  padding: 10px;
+  color: #fff;
 
   &:hover .list {
     display: block;
@@ -51,23 +55,24 @@ function handleChange({ title, value }: { title: string; value: string }) {
   @include mixins.button();
   inline-size: 100px;
   block-size: 30px;
-  background-color: rgb(34, 120, 177);
-  color: #fff;
+  background-color: #fff;
+  color: #000;
   font-size: 15px;
+  border-radius: 5px;
 }
 
 .list {
   display: none;
   position: absolute;
-  inset-inline-start: 45px;
-  inset-block-start: 30px;
+  inset-inline-start: 59px;
+  inset-block-start: 36px;
   background-color: #fff;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   inline-size: 100px;
   &__item {
     cursor: pointer;
     &:hover {
-      background-color: red;
+      background-color: rgba(220, 220, 220, 0.826);
     }
   }
   &__button {

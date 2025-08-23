@@ -65,6 +65,11 @@ function getIsSelected(index: number) {
   );
 }
 
+function getIsThisMonth(index: number) {
+  const current = getDate(index);
+  return current.getMonth() !== month.value;
+}
+
 function increment() {
   date.value = new Date(date.value);
   date.value.setMonth(date.value.getMonth() + 1);
@@ -103,53 +108,56 @@ onMounted(() => {
       <h1 class="header__title">{{ getTitle() }}</h1>
       <Button side="right" @click="increment" />
     </header>
-    <ul class="days">
-      <li v-for="value in 7" class="days__item">{{ getDayname(value) }}</li>
-    </ul>
-    <ul class="list">
-      <li
-        v-for="value in 35"
-        class="list__item"
-        :class="{
-          list__item_active: getIsActive(value),
-          list__item_selected: getIsSelected(value),
-        }"
-      >
-        <button class="list__button" @click="handleClick(value)">
-          {{ getDate(value).getDate() }}
-        </button>
-      </li>
-    </ul>
-    <Dropdown
-      title="Язык"
-      :options="[
-        { title: 'Русский', value: 'ru' },
-        { title: 'Английский', value: 'en' },
-      ]"
-      @change="handleLangChange"
-    />
+      <ul class="days">
+        <li v-for="value in 7" class="days__item">{{ getDayname(value) }}</li>
+      </ul>
+      <ul class="list">
+        <li
+          v-for="value in 35"
+          class="list__item"
+          :class="{
+            list__item_active: getIsActive(value),
+            list__item_selected: getIsSelected(value),
+            list__item_other: getIsThisMonth(value)
+          }"
+        >
+          <button class="list__button" @click="handleClick(value)">
+            {{ getDate(value).getDate() }}
+          </button>
+        </li>
+      </ul>
+      <Dropdown
+        title="Язык"
+        :options="[
+          { title: 'Русский', value: 'ru' },
+          { title: 'Английский', value: 'en' },
+        ]"
+        @change="handleLangChange"
+      />
   </div>
 </template>
 <style scoped lang="scss">
 @use "../styles/mixins.scss";
 
 .calendar {
-  border: 1px solid black;
   border-radius: 15px;
-  padding: 15px;
+  box-shadow: 6px 6px 15px rgba(0 0 0 / 0.5);
 }
 
 .header {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px;
-  margin-block-end: 20px;
+  padding: 22px;
+  background-color: rgb(0, 95, 196);
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+  color: #fff;
 
   &__title {
-    min-inline-size: 150px;
+    min-inline-size: 250px;
     text-align: center;
-    font-size: 25px;
+    font-size: 33px;
     margin-inline: 40px;
   }
 
@@ -160,9 +168,9 @@ onMounted(() => {
 
 .list {
   display: grid;
-  grid-template-columns: repeat(7, 45px);
-  grid-template-rows: repeat(5, 45px);
-  gap: 15px;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  justify-content: center;
 
   &__item {
     display: flex;
@@ -171,14 +179,18 @@ onMounted(() => {
     cursor: pointer;
     inline-size: 100%;
     aspect-ratio: 1;
-    border: 1px solid cyan;
-
+    &:hover:not(&_selected) {
+      background-color: #18aea13e;
+    }
     &_active {
-      background-color: red;
+      background-color: rgba(0, 95, 196, 0.441);
     }
 
     &_selected {
-      background-color: blue;
+      background-color: #9699b5;
+    }
+    &_other {
+      background-color: rgba(220, 220, 220, 0.826);
     }
   }
 
@@ -190,19 +202,18 @@ onMounted(() => {
 }
 
 .days {
-  margin-block-end: 15px;
-  display: flex;
-  gap: 15px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
 
   &__item {
     display: flex;
     justify-content: center;
     align-items: center;
-    inline-size: 45px;
-    block-size: 45px;
-    border: 1px solid cyan;
+    inline-size: 100%;
+    aspect-ratio: 1;
     text-transform: uppercase;
     font-size: 12px;
+    color: rgb(0, 95, 196);
   }
 }
 </style>
