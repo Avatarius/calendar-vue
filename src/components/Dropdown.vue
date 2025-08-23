@@ -57,7 +57,7 @@ function handleChange({ title, value }: { title: string; value: string }) {
 }
 
 .list {
-  display: block;
+  display: none;
   position: absolute;
   inset-inline-start: 45px;
   inset-block-start: 30px;

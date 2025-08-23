@@ -34,7 +34,7 @@ function getDay(index: number) {
 }
 
 function getTitle() {
-  const month = date.value.toLocaleString("default", { month: "long" });
+  const month = date.value.toLocaleString(lang.value, { month: "long" });
   return `${month} ${year.value}`;
 }
 
@@ -75,7 +75,6 @@ onMounted(() => {
 <template>
   <div class="calendar">
     <header class="header">
-      {{ lang }}
       <Button side="left" @click="decrement" />
       <h1 class="header__title">{{ getTitle() }}</h1>
       <Button side="right" @click="increment" />
