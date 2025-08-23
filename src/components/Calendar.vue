@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
-import Button from './Button.vue';
+import Button from "./Button.vue";
 
 const { dateString } = defineProps<{ dateString?: string }>();
 
@@ -11,9 +11,8 @@ const year = computed(() => {
 });
 
 const month = computed(() => {
-  return date.value.getMonth()
+  return date.value.getMonth();
 });
-
 
 const firstDay = computed(() => {
   return new Date(year.value, month.value, 1);
@@ -38,8 +37,12 @@ function getTitle() {
 }
 
 function getIsActive(index: number) {
-  const today = new Date().getDate();
-  return today === getDay(index);
+  const today = new Date();
+  return (
+    today.getDate() === getDay(index) &&
+    today.getMonth() === date.value.getMonth() &&
+    today.getFullYear() === date.value.getFullYear()
+  );
 }
 
 function increment() {
@@ -69,7 +72,11 @@ onMounted(() => {
       <Button side="right" @click="increment" />
     </header>
     <ul class="list">
-      <li v-for="value in 35" class="list__item" :class="{ list__item_active: getIsActive(value) }">
+      <li
+        v-for="value in 35"
+        class="list__item"
+        :class="{ list__item_active: getIsActive(value) }"
+      >
         <span>{{ getDay(value) }}</span>
       </li>
     </ul>
@@ -90,6 +97,7 @@ onMounted(() => {
   margin-block-end: 20px;
 
   &__title {
+    min-inline-size: 150px;
     text-align: center;
     font-size: 25px;
     margin-inline: 40px;
