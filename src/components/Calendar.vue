@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import Button from "./Button.vue";
+import Dropdown from "./Dropdown.vue";
 
 const { dateString } = defineProps<{ dateString?: string }>();
 
 const date = ref(new Date());
+const lang = ref<'ru' | 'en'>('ru');
 
 const year = computed(() => {
   return date.value.getFullYear();
@@ -55,6 +57,12 @@ function decrement() {
   date.value.setMonth(date.value.getMonth() - 1);
 }
 
+function handleLangChange(value: string) {
+  if (value === 'ru' || value === 'en') {
+    lang.value = value;
+  }
+}
+
 onMounted(() => {
   if (!dateString) return;
   const dateFromStr = new Date(dateString);
@@ -67,6 +75,7 @@ onMounted(() => {
 <template>
   <div class="calendar">
     <header class="header">
+      {{ lang }}
       <Button side="left" @click="decrement" />
       <h1 class="header__title">{{ getTitle() }}</h1>
       <Button side="right" @click="increment" />
@@ -80,6 +89,7 @@ onMounted(() => {
         <span>{{ getDay(value) }}</span>
       </li>
     </ul>
+    <Dropdown title="Язык" :options="[{title: 'Русский', value: 'ru'}, {title: 'Английский', value: 'en'}]" @change="handleLangChange"/>
   </div>
 </template>
 <style scoped lang="scss">
